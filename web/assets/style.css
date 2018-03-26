@@ -1,0 +1,35 @@
+body{
+  margin: auto;
+  width: 500px;
+  text-align: center;
+}
+
+button {
+  display: block;
+  width: 200px;
+  height: 3em;
+  margin: auto;
+  margin-top: 3em;
+}
+
+label {
+  font-weight: bold;
+}
+
+.hour {
+  margin-top: 3em;
+}
+
+h1 {
+  margin-top: .3em;
+}
+
+input {
+  width: 5.5em;
+  font-size: 1.3em;
+  margin-left: 1em;
+}
+
+#current-time {
+  font-weight: bold;
+}
