@@ -9,15 +9,19 @@ if len(sys.argv) < 2:
 
 command = sys.argv[1]
 
-GPIO.setwarnings(False)
-GPIO.setmode(GPIO.BOARD)
+# setup
+GPIO.setwarnings(False) # avoids warning if another script has set the same pins
+GPIO.setmode(GPIO.BOARD) # sets pin numbering scheme
 
+# name our pins...
 blue = 18
 yellow = 22
 
+# ...and set them as outputs
 GPIO.setup(blue, GPIO.OUT)
 GPIO.setup(yellow, GPIO.OUT)
 
+# defines high & low levels for each pin based on command line argument
 if command == 'debout':
   blue_level = GPIO.LOW
   yellow_level = GPIO.HIGH
@@ -27,6 +31,6 @@ elif command == 'dodo':
 else:
   blue_level = yellow_level = GPIO.LOW
 
-
+# applies levels to each pin
 GPIO.output(blue, blue_level)
 GPIO.output(yellow, yellow_level)
