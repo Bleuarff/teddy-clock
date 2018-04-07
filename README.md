@@ -8,6 +8,11 @@ Light-based "alarm clock": an augmented plush toy that tell children if it's nig
 - a plush toy to hide the rpi
 - a table tennis ball, to act as light diffuser
 
+## Hardware
+
+![schematics](https://github.com/Bleuarff/teddy-clock/blob/master/schematics.png)
+
+
 ## Software
 
 A simple python scrip that switches leds on/off based on command line parameter.
@@ -22,7 +27,3 @@ Script is run by different cron tasks at different times of the day:
 
     # during the day: switch off
     */30 12-19 * * * /home/pi/teddy-clock/ledclock.py off
-    
-## Hardware
-
-(insert schematics here)
