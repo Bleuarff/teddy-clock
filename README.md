@@ -23,14 +23,14 @@ A simple python script that switches leds on/off based on command line parameter
 Script is run by different cron tasks at different times of the day:
 
     # in the morning: switch to wakeup (yellow). Different start time during week and weekends
-    */15 7-11 * * 1-5 /home/pi/teddy-clock/ledclock.py debout
-    */15 8-11 * * 0,6 /home/pi/teddy-clock/ledclock.py debout
+    */15 7-9 * * 1-5 /home/pi/teddy-clock/ledclock.py debout
+    */15 8-9 * * 0,6 /home/pi/teddy-clock/ledclock.py debout
 
     # evening and night: set blue
     */15 0-6,20-23 * * * /home/pi/teddy-clock/ledclock.py dodo
 
     # during the day: switch off
-
+    */30 10-19 * * * /home/pi/teddy-clock/ledclock.py off
 
 ### Timekeeping
 
