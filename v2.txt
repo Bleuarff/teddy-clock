@@ -1,0 +1,13 @@
+- arduino: uno/nano/autre ?
+- ds3231: Vcc, Gnd, SCL (A5) & SDA (A4)
+-ESP8266: vcc/3.3V, Gnd, tx, rx, ch_pd/3.3V
+- 1 led: gnd + 3 pins PWM
+
+- arduino needs 5V & 3.3V outputs
+
+
+Features
+- pwm rgb led on/off
+- rtc
+- wifi
+- bouton on/off wifi
