@@ -6,17 +6,12 @@
 
 #include <EEPROM.h>
 
-struct Alarm {
-  byte hour;
-  byte min;  
-};
-
 void setup() {
   Serial.begin(9600);
 
-  Alarm dodo = {20, 0};
-  Alarm time1 = {7, 0};
-  Alarm time2 = {7, 30};
+  int dodo = 20 * 60;
+  int time1 = 7 * 60;
+  int time2 = 7 * 60 + 30;
 
   EEPROM.put(1, dodo);
   EEPROM.put(3, time1);
@@ -25,7 +20,7 @@ void setup() {
 }
 
 void loop() {
-  Alarm dodo, a1, a2;
+  int dodo, a1, a2;
   EEPROM.get(1, dodo);
   EEPROM.get(3, a1);
   EEPROM.get(5, a2);
@@ -37,10 +32,11 @@ void loop() {
   delay(5 * 60 * (long)1000);
 }
 
-void print(Alarm a){
-  Serial.print(a.hour);
+void print(int a){
+  byte hour = a / 60;
+  byte min = a % 60;
+  Serial.print(hour);
   Serial.print(":");
-  Serial.print(a.min);
+  Serial.print(min);
   Serial.print("\n");
 }
-
