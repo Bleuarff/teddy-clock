@@ -81,12 +81,12 @@ Time checkTimeChange(Time t){
     // reset winter time change flag, without changing other (future) bits
     byte flags = EEPROM.read(0) & 0b11111110;
     EEPROM.update(0, flags);
+    winterTimeChangeDone = false;
   }
   // winter time change at 3AM on the last sunday of October
   else if (t.hour == 3 && t.month == 10 && t.dow == 7 && t.date >= 25 && t.date <= 31){
     // request first byte from EEPROM where the LSB is the flag that indicate whether it's been done already
-    byte flag = EEPROM.read(0);
-    if ((flag & 0b00000001) == 1){
+    if (winterTimeChangeDone){
       Serial.print("already done");
     }
     else{
@@ -100,6 +100,7 @@ Time checkTimeChange(Time t){
       // sets winter time change flag to 1 while keeping other bits' value
       byte flags = EEPROM.read(0) | 0b00000001;
       EEPROM.update(0, flags);
+      winterTimeChangeDone = true;
     }
   }
 
