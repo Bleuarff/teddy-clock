@@ -21,6 +21,13 @@ struct Time {
   byte dow;
 };
 
+// Store light modulation factor for each rgb channel
+struct ModFactor {
+  byte rf; // red channel
+  byte gf; // g channel
+  byte bf; // b channel
+};
+
 // 3 alarms needed
 int dodo, wakeup1, wakeup2;
 bool winterTimeChangeDone;
@@ -30,7 +37,7 @@ void setup(){
   Wire.begin();
 
   // for dev/tests: set RTC
-  setTime((Time){07, 32, 24, 6, 6});
+  setTime((Time){7, 29, 24, 6, 6});
 
   winterTimeChangeDone = (EEPROM.read(0) & 0b00000001) == 1;
   // get all alarms stored in EEPROM
@@ -53,16 +60,58 @@ void loop(){
 
   printTime(t);
 
-  // check action to do (lights on/off)
+  // gets clock  state to apply
   const LedStates lightState = getLightState(t);
-
   printState(lightState);
 
-  // get light sensor value and TODO: set output brightness
-  int lightLvl = analogRead(sensorPin);
+  ModFactor mofact = getModFactor(); // get modulation factor for each rgb channel from light sensor value
+  setLed(lightState, mofact); // update led state
 
   delay(5000);
 }
+
+// set modulation factor from light sensor
+ModFactor getModFactor(){
+  int lightLvl = analogRead(sensorPin);
+  //float lightRatio = (float)lightLvl / 1024;
+
+}
+
+// Write RGB values from clockstate
+// state: clock state
+//
+void setLed(LedStates state, ModFactor mofact){
+  int red, green, blue; // pwm value for each pin
+
+  switch(state){
+    case Off:
+      red = green = blue = 0;
+      break;
+    case Dodo:
+      red = green = 0;
+      blue = 255 ;
+      break;
+    case Debout:
+      blue = 0;
+      green = 255;
+      red = 128;
+      break;
+  }
+  analogWrite(redPin, red);
+  analogWrite(greenPin, green);
+  analogWrite(bluePin, blue);
+
+  Serial.print(red);
+  Serial.print(" ");
+  Serial.print(green);
+  Serial.print(" ");
+  Serial.print(blue);
+  Serial.print("\n");
+}
+
+// void writeColor(int red, int green, int blue){
+//
+// }
 
 // return the state to apply to the led based on current time & global alarms
 // alarms are assumed to be ordered: wakeup1 < wakeup2 < off < dodo
