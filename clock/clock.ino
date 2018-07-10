@@ -23,9 +23,9 @@ struct Time {
 
 // Store light modulation factor for each rgb channel
 struct ModFactor {
-  byte rf; // red channel
-  byte gf; // g channel
-  byte bf; // b channel
+  float rf; // red channel
+  float gf; // green channel
+  float bf; // blue channel
 };
 
 // 3 alarms needed
@@ -37,7 +37,7 @@ void setup(){
   Wire.begin();
 
   // for dev/tests: set RTC
-  setTime((Time){7, 29, 24, 6, 6});
+  setTime((Time){7, 28, 24, 6, 6});
 
   winterTimeChangeDone = (EEPROM.read(0) & 0b00000001) == 1;
   // get all alarms stored in EEPROM
@@ -71,10 +71,12 @@ void loop(){
 }
 
 // set modulation factor from light sensor
+// Currently: linear relationship between ambiant light value and output led value, for all color channels
+// TODO: calibrate: min/max value for min/max ambiant light values. See calibrage_photores sketch
 ModFactor getModFactor(){
   int lightLvl = analogRead(sensorPin);
-  //float lightRatio = (float)lightLvl / 1024;
-
+  float lightRatio = (float)lightLvl / 1024;
+  return { lightRatio, lightRatio, lightRatio };
 }
 
 // Write RGB values from clockstate
@@ -89,12 +91,12 @@ void setLed(LedStates state, ModFactor mofact){
       break;
     case Dodo:
       red = green = 0;
-      blue = 255 ;
+      blue = 255 * mofact.bf;
       break;
     case Debout:
       blue = 0;
-      green = 255;
-      red = 128;
+      green = 255 * mofact.gf;
+      red = 128 * mofact.rf;
       break;
   }
   analogWrite(redPin, red);
