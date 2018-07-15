@@ -12,20 +12,62 @@
       <table>
         <tr>
           <td>Heure du coucher:</td>
-          <td><input type="time" id="dodo-time"></td>
+          <td>
+            <input type="time" id="dodo-time">
+          </td>
+        </tr>
+        <tr>
+          <td class="err hidden" id="err-dodo" colspan="2">L'heure n'est pas valide !</td>
         </tr>
         <tr>
           <td>Heure du lever (semaine):</td>
-          <td><input type="time" id="wakeup-time-semaine"></td>
+          <td>
+            <input type="time" id="wakeup-time-semaine">
+          </td>
+        </tr>
+        <tr>
+          <td class="err hidden" id="err-wake-week" colspan="2">L'heure n'est pas valide !</td>
         </tr>
         <tr>
           <td>Heure du lever (weekend):</td>
-          <td><input type="time" id="wakeup-time-weekend"></td>
+          <td>
+            <input type="time" id="wakeup-time-weekend">
+          </td>
+        </tr>
+          <td class="err hidden" id="err-wake-weekend" colspan="2">L'heure n'est pas valide !</td>
+        <tr>
         </tr>
       </table>
 
       <button onclick="update()">Mettre à jour</button>
     </div>
+
+    <script type="text/javascript">
+      'use strict'
+
+      function update(){
+        const dodo = document.getElementById('dodo-time').value,
+            wakeup_semaine = document.getElementById('wakeup-time-semaine').value,
+            wakeup_weekend = document.getElementById('wakeup-time-weekend').value
+
+        if (!validation(dodo, wakeup_semaine, wakeup_weekend))
+          console.log('coin')
+
+      }
+
+      function validation(dodo, wake1, wake2){
+        var node = document.getElementById('err-dodo')
+        node.classList[dodo ? 'add' : 'remove'].call(node.classList, 'hidden')
+
+        node = document.getElementById('err-wake-week')
+        node.classList[wake1 ? 'add' : 'remove'].call(node.classList, 'hidden')
+
+        node = document.getElementById('err-wake-weekend')
+        node.classList[wake2 ? 'add' : 'remove'].call(node.classList, 'hidden')
+
+        return dodo && wake1 && wake2
+      }
+    </script>
 
     <style>
       body{
@@ -62,13 +104,11 @@
         width:50%;
         padding-top: .6em;
       }
-      td:first-child{
-        /* background: orange; */
+      td:first-child:not(.err){
         text-align: right;
         padding-right: .4em;
       }
       td:nth-child(2){
-        /* background: cyan; */
         text-align: left;
         padding-left: .4em;
       }
@@ -78,6 +118,15 @@
       button{
         width: 65%;;
         height: 3.5em;
+      }
+      .err{
+        color: red;
+        font-size: .9em;
+        text-align:center;
+        padding-bottom: .8em;
+      }
+      .hidden{
+        display: none !important;
       }
     </style>
   </body>
