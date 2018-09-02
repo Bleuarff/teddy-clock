@@ -6,6 +6,13 @@ boolean newData = false;
 
 void setup(){
   Serial.begin(9600); // slower baud rate to ease pressure on code execution time
+
+  // set led pins
+  pinMode(6, OUTPUT);
+  pinMode(3, OUTPUT);
+  pinMode(5, OUTPUT);
+
+  setLed(0,0,255);
 }
 
 void loop(){
@@ -33,10 +40,12 @@ void receive(){
         numReceived = ndx;
         ndx = 0;
         newData = true;
+        setLed(255,0,0);
       }
     }
     else if (rb == startMarker){
       recvInProgress = true;
+      setLed(0,255,0);
     }
   }
 }
@@ -48,4 +57,10 @@ void show(){
     Serial.println(" bytes received");
     newData = false;
   }
+}
+
+void setLed(int red, int green, int blue){
+  analogWrite(6, red);
+  analogWrite(3, green);
+  analogWrite(5, blue);
 }
