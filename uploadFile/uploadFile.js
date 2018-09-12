@@ -10,7 +10,7 @@ Usage: node uploadFile.js FILE
 const SerialPort = require('serialport'),
       fs = require('fs'),
       PORT = '/dev/ttyUSB0',
-      PAGE_SIZE = 64,
+      PAGE_SIZE = 32,
       START_MARKER = 0x02,
       END_MARKER = 0x03;
 
@@ -68,7 +68,7 @@ void async function main(){
       await new Promise(resolve => {
         let progress = (++p * PAGE_SIZE) / content.length * 100
         console.log(`---- ${progress.toFixed(1)}% ----`)
-        setTimeout(resolve, 50)
+        setTimeout(resolve, 120)
       })
       c = 0
     }
