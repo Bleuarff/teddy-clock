@@ -15,7 +15,7 @@ const SerialPort = require('serialport'),
       END_MARKER = 0x03;
 
 const filePath = process.argv[2],
-      content = fs.readFileSync(filePath, null)
+      content = fs.readFileSync(filePath, null) // encoding is null to return file content as a buffer
 
 void async function main(){
 
@@ -39,8 +39,9 @@ void async function main(){
     var res = data.toString('ascii')
     process.stdout.write(res)
 
-    // arduino responds with number of bytes, ended by a newline
-    if (res.endsWith('\n')){
+    // when done, arduino sends a special message to notify upload & read is done
+    if (res.endsWith('\n\n\n\n\n')){
+      console.log('End transmission')
       port.close()
     }
   });
@@ -67,8 +68,8 @@ void async function main(){
     if (c === PAGE_SIZE){
       await new Promise(resolve => {
         let progress = (++p * PAGE_SIZE) / content.length * 100
-        console.log(`---- ${progress.toFixed(1)}% ----`)
-        setTimeout(resolve, 120)
+        console.log(`\n---- ${progress.toFixed(1)}% ----`)
+        setTimeout(resolve, 100) // if wait time is too small, arduino misses some bytes
       })
       c = 0
     }

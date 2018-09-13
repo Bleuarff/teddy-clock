@@ -1,5 +1,7 @@
-// Send file data (utf-8 ?), write each byte to eeprom, starting at offset 2.
-// when file complete, get length and write to eeprom at offset 0
+// Send file data, write each byte to eeprom, starting at offset 2.
+// when file complete, get length and write to eeprom at offset 0. Then proceeds to read the content and send it back
+
+// uses an RGB led for debugging. Blue: arduino started. Red: message incoming. Green: message finished
 
 #include <Wire.h>
 #define EEPROM_ADDRESS 0x50 // i2C address of the 24LC256 eeprom
@@ -31,7 +33,9 @@ void loop(){
 
 void receive(){
   static boolean recvInProgress = false;
-  static byte ndx = 0;
+  static int ndx = 0;
+
+  // start and end marker around message
   byte startMarker = 0x02;
   byte endMarker = 0x03;
   byte rb;
@@ -42,20 +46,23 @@ void receive(){
     if (recvInProgress == true){
       if (rb != endMarker){
         ndx++;
-        // write byte to eeprom
+        // store byte in buffer
         Wire.write(rb);
-        Serial.print(rb);
-        Serial.print(" ");
+
+        // Serial.print(rb);
+        // Serial.print(" ");
 
         // stop and send data when either Wire buffer limit is reached or to not cross page boundaries on the 24LC256
         if ((ndx % BUFFER_SIZE == 0) || ((ndx+2) % PAGE_SIZE == 0)){
           Wire.endTransmission();
           byte hob = ((ndx + 2) & 0xff00) >> 8;
           byte lob = (ndx + 2) & 0x00ff;
-          Serial.print("\nwrite page - new page address: ");
-          Serial.print(hob);
-          Serial.print("/");
-          Serial.println(lob);
+
+          // Serial.print("\nwrite page - new page address: ");
+          // Serial.print(hob);
+          // Serial.print("/");
+          // Serial.println(lob);
+
           i2cReady(EEPROM_ADDRESS);
 
           // open connection for next page
@@ -79,6 +86,7 @@ void receive(){
       Serial.println("Message start");
       recvInProgress = true;
       setLed(255,0,0);
+
       // open connection to memory chip and set address
       Wire.beginTransmission(EEPROM_ADDRESS);
       Wire.write(0);
@@ -127,6 +135,8 @@ void readContent(int length){
 
   bool ready = i2cReady(EEPROM_ADDRESS);
 
+  // TODO: no need to set the address pointer for each iteration, a read updates it to point to the following byte.
+
   for(int i = 0; i < pages; i++){
     int address = i * 32;
     Wire.beginTransmission(EEPROM_ADDRESS);
@@ -149,6 +159,7 @@ void readContent(int length){
 
     Serial.println();
   }
+  Serial.print("\n\n\n\n\n");
 
 }
 
