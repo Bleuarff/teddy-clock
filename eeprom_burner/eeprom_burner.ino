@@ -135,20 +135,20 @@ void readContent(int length){
 
   bool ready = i2cReady(EEPROM_ADDRESS);
 
-  // TODO: no need to set the address pointer for each iteration, a read updates it to point to the following byte.
+  // Set pointer at 0 and let it roll, no need to set it after that.
+  Wire.beginTransmission(EEPROM_ADDRESS);
+  Wire.write(0);
+  Wire.write(0);
+  Wire.endTransmission();
+  i2cReady(EEPROM_ADDRESS);
 
   for(int i = 0; i < pages; i++){
     int address = i * 32;
-    Wire.beginTransmission(EEPROM_ADDRESS);
-    Wire.write((address & 0xff00) >> 8);
-    Wire.write(address & 0x00ff);
-    Wire.endTransmission();
 
     int readLength = (i < pages - 1) ? 32 : length % 32;
     // Serial.print("read length ");
     // Serial.println(readLength);
 
-    i2cReady(EEPROM_ADDRESS);
 
     Wire.requestFrom(EEPROM_ADDRESS, readLength);
     while(Wire.available()){
