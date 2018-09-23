@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Teddy-clock web ui</title>
   </head>
   <body>
@@ -39,7 +40,7 @@
         </tr>
       </table>
 
-      <button onclick="update()">Mettre à jour</button>
+      <button onclick="update()" id="go">Mettre à jour</button>
     </div>
 
     <script type="text/javascript">
@@ -79,7 +80,7 @@
       }
       h1{
         color: white;
-        background: #965f00;
+        background: #0063b7;
         margin: 0 0 1em;
         padding: 2px 0;
         font-size: 1.8em;
@@ -127,6 +128,10 @@
       }
       .hidden{
         display: none !important;
+      }
+      #go{
+        color: white;
+        background: #0063b7;
       }
     </style>
   </body>
