@@ -19,9 +19,9 @@ void setup(){
   EEPROM.begin(13);
   //
   // EEPROM.write(0, 1);
-  EEPROM.put(1, (int)432);
-  EEPROM.put(5, (int)666);
-  EEPROM.put(9, (int)1002);
+  EEPROM.put(1, (int)(20*60));
+  EEPROM.put(5, (int)(7*60 + 15));
+  EEPROM.put(9, (int)(9*60+30));
 
   bool res = EEPROM.commit();
   if (res == true)
