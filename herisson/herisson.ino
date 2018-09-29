@@ -9,6 +9,8 @@ enum LedStates {Dodo, Debout, Off};
 const byte redPin = 14;
 const byte greenPin = 13;
 const byte bluePin = 12;
+const byte switchPin = 16;
+const int CLOCK_CHECK_INTERVAL = 5000; // time between clock checks
 
 // Object to store timestamp
 // seconds are not needed.
@@ -31,9 +33,17 @@ struct ModFactor {
 int dodo, wakeup1, wakeup2;
 bool winterTimeChangeDone;
 
+// timestamp of last time we checked time & set led according to it
+unsigned long lastClockCheck;
+
 void setup(){
   Serial.begin(115200);
   Wire.begin();
+
+  pinMode(redPin, OUTPUT);
+  pinMode(bluePin, OUTPUT);
+  pinMode(greenPin, OUTPUT);
+  pinMode(switchPin, INPUT);
 
   // for dev/tests: set RTC
   setTime((Time){19, 59, 25, 9, 3});
@@ -50,27 +60,57 @@ void setup(){
   printAlarm(dodo);
   printAlarm(wakeup1);
   printAlarm(wakeup2);
+
+  lastClockCheck = millis();
 }
 
 void loop(){
-  Time t = getTime(); // read time. Already adjusted for daylight savings
+  static unsigned long lastWifiSwitch = 0;
+  static bool isUpdateMode = false; // true when switch is pressed, until next press
 
-  if (t.month == 0){ // in case of error, getTime returns a Time with all members set to 0
-    Serial.print("invalid time\n");
-    delay(5000);
-    return;
+  int switchState = digitalRead(switchPin);
+
+  // act upon switch pressed if not too close from last press. Avoids 1 press to be detected multiple times (a kind of debounce)
+  if (switchState == HIGH && millis() - lastWifiSwitch >= 5000){
+    isUpdateMode = !isUpdateMode;
+
+    if (isUpdateMode){
+      Serial.println("Set wifi ON");
+      // TODO: set up wifi & full green
+    }
+    else{
+      Serial.println("Set wifi OFF");
+      // TODO: switch off wifi
+    }
+
+    lastWifiSwitch = millis(); // debounce: keep track of last time we registered a switch between clock check and update mode
   }
 
-  printTime(t);
+  if (isUpdateMode){
+    blinkGreen();
+  }
 
-  // gets clock  state to apply
-  const LedStates lightState = getLightState(t);
-  printState(lightState);
+  // check time & set led if update mode, (i.e. server) is inactive.
+  // also use millis & time compare instead of delay, for non-blocking code
+  if (!isUpdateMode && millis() - lastClockCheck >= CLOCK_CHECK_INTERVAL){
+    Time t = getTime(); // read time. Already adjusted for daylight savings
 
-  ModFactor mofact = getModFactor(); // get modulation factor for each rgb channel from light sensor value
-  setLed(lightState, mofact); // update led state
+    if (t.month == 0){ // in case of error, getTime returns a Time with all members set to 0
+      Serial.print("invalid time\n");
+      return;
+    }
 
-  delay(5000);
+    printTime(t);
+
+    // gets clock  state to apply
+    const LedStates lightState = getLightState(t);
+    printState(lightState);
+
+    ModFactor mofact = getModFactor(); // get modulation factor for each rgb channel from light sensor value
+    setLed(lightState, mofact); // update led state
+
+    lastClockCheck = millis();
+  }
 }
 
 // Write RGB values from clockstate
@@ -166,5 +206,27 @@ void printState(LedStates l){
     case Off:
       Serial.print("off\n");
       break;
+  }
+}
+
+void blinkGreen(){
+  static unsigned long lastBlink = millis();
+  static bool blinkOn = false;
+
+  if (millis() - lastBlink >= 500){
+    blinkOn = !blinkOn;
+
+    if (blinkOn){
+      digitalWrite(redPin, LOW);
+      digitalWrite(greenPin, HIGH);
+      digitalWrite(bluePin, LOW);
+    }
+    else{
+      digitalWrite(redPin, LOW);
+      digitalWrite(greenPin, LOW);
+      digitalWrite(bluePin, LOW);
+    }
+
+    lastBlink = millis();
   }
 }
