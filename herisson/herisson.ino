@@ -45,6 +45,8 @@ void setup(){
   pinMode(greenPin, OUTPUT);
   pinMode(switchPin, INPUT);
 
+  setAirplaneMode();
+
   // for dev/tests: set RTC
   setTime((Time){19, 59, 25, 9, 3});
 
@@ -67,27 +69,42 @@ void setup(){
 void loop(){
   static unsigned long lastWifiSwitch = 0;
   static bool isUpdateMode = false; // true when switch is pressed, until next press
+  static bool serverOK = false;
 
   int switchState = digitalRead(switchPin);
 
   // act upon switch pressed if not too close from last press. Avoids 1 press to be detected multiple times (a kind of debounce)
-  if (switchState == HIGH && millis() - lastWifiSwitch >= 5000){
+  if (switchState == HIGH && millis() - lastWifiSwitch >= 3000){
     isUpdateMode = !isUpdateMode;
 
     if (isUpdateMode){
-      Serial.println("Set wifi ON");
-      // TODO: set up wifi & full green
+      // start wifi & server
+      serverOK = startServer();
     }
     else{
-      Serial.println("Set wifi OFF");
-      // TODO: switch off wifi
+      // switch off wifi
+      bool res = stopServer();
+      // led red if error
+      if (!res){
+        digitalWrite(redPin, HIGH);
+        digitalWrite(greenPin, LOW);
+        digitalWrite(bluePin, LOW);
+        delay(5000);
+      }
     }
 
     lastWifiSwitch = millis(); // debounce: keep track of last time we registered a switch between clock check and update mode
   }
 
+  // in update mode, blink green if wifi & server are set up ok. Otherwise show red
   if (isUpdateMode){
-    blinkGreen();
+    if (serverOK)
+      blinkGreen();
+    else{
+      digitalWrite(redPin, HIGH);
+      digitalWrite(greenPin, LOW);
+      digitalWrite(bluePin, LOW);
+    }
   }
 
   // check time & set led if update mode, (i.e. server) is inactive.
@@ -213,7 +230,7 @@ void blinkGreen(){
   static unsigned long lastBlink = millis();
   static bool blinkOn = false;
 
-  if (millis() - lastBlink >= 500){
+  if (millis() - lastBlink >= 800){
     blinkOn = !blinkOn;
 
     if (blinkOn){
