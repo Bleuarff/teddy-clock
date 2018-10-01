@@ -48,7 +48,7 @@ void setup(){
   setAirplaneMode();
 
   // for dev/tests: set RTC
-  setTime((Time){19, 59, 25, 9, 3});
+  // setTime((Time){19, 59, 25, 9, 3});
 
   EEPROM.begin(13); // 13 bytes needed. cf readme for usage/Layout
 

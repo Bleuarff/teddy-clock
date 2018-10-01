@@ -28,8 +28,10 @@ bool stopServer(){
   return res;
 }
 
+// goes to modem-sleep mode. Consumes ~20mA instead of 80+ mA when wifi is up
 void setAirplaneMode(){
   WiFi.mode(WIFI_OFF);
-  // wifi_set_sleep_type(LIGHT_SLEEP_T/*MODEM_SLEEP_T*/);
-  wifi_fpm_set_sleep_type(0xFFFFFFF);
+  wifi_set_sleep_type(MODEM_SLEEP_T);
+  WiFi.forceSleepBegin();
+  delay(1); // a delay is necessary for forcesleepbegin to have effect
 }
