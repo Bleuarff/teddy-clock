@@ -1,5 +1,7 @@
 #include <Wire.h>
 #include <EEPROM.h>
+#include "FS.h"
+#include <ESP8266WebServer.h>
 
 const uint8_t RTC_ADDRESS = 0x68; // i2C address of the DS3231
 
@@ -36,6 +38,9 @@ bool winterTimeChangeDone;
 // timestamp of last time we checked time & set led according to it
 unsigned long lastClockCheck;
 
+// server object
+ESP8266WebServer server(80);
+
 void setup(){
   Serial.begin(115200);
   Wire.begin();
@@ -62,6 +67,10 @@ void setup(){
   printAlarm(dodo);
   printAlarm(wakeup1);
   printAlarm(wakeup2);
+
+  if (!SPIFFS.begin()){
+    Serial.println("SPIFFS mount fail.");
+  }
 
   lastClockCheck = millis();
 }
@@ -98,8 +107,9 @@ void loop(){
 
   // in update mode, blink green if wifi & server are set up ok. Otherwise show red
   if (isUpdateMode){
+    server.handleClient();
     if (serverOK)
-      blinkGreen();
+      blink(1);
     else{
       digitalWrite(redPin, HIGH);
       digitalWrite(greenPin, LOW);
@@ -226,7 +236,11 @@ void printState(LedStates l){
   }
 }
 
-void blinkGreen(){
+// color: specify which color to set when blinking:
+// 0: red
+// 1: green
+// 2: blue
+void blink(byte color){
   static unsigned long lastBlink = millis();
   static bool blinkOn = false;
 
@@ -234,9 +248,10 @@ void blinkGreen(){
     blinkOn = !blinkOn;
 
     if (blinkOn){
-      digitalWrite(redPin, LOW);
-      digitalWrite(greenPin, HIGH);
-      digitalWrite(bluePin, LOW);
+
+      digitalWrite(redPin, color == 0 ? HIGH : LOW);
+      digitalWrite(greenPin, color == 1 ? HIGH : LOW);
+      digitalWrite(bluePin, color == 2 ? HIGH : LOW);
     }
     else{
       digitalWrite(redPin, LOW);

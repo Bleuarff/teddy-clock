@@ -4,10 +4,6 @@
 #include <ESP8266mDNS.h>
 #include "FS.h"
 
-// network id & pwd
-const char *ssid = "Herisson";
-const char *password = "gabuzomeu";
-
 ESP8266WebServer server(80);
 // File uiFile;
 
@@ -16,15 +12,22 @@ void setup() {
   Serial.begin(115200);
   Serial.println();
 
-  WiFi.begin("SOBL-240", "onchoisisunmotdepassepournepassefairepirateroulahnononveutpas!");
+  // WiFi.begin("SOBL-240", "onchoisisunmotdepassepournepassefairepirateroulahnononveutpas!");
+  // Serial.print("Connecting");
+  // while (WiFi.status() != WL_CONNECTED)
+  // {
+  //   delay(500);
+  //   Serial.print(".");
+  // }
+  // Serial.println();
 
-  Serial.print("Connecting");
-  while (WiFi.status() != WL_CONNECTED)
-  {
-    delay(500);
-    Serial.print(".");
+  WiFi.mode(WIFI_AP);
+  bool res = WiFi.softAP("Herisson", NULL, 14, false, 2);
+
+  if (!res){
+    Serial.println("Wifi failed");
+    return;
   }
-  Serial.println();
 
   Serial.print("Connected, IP address: ");
   Serial.println(WiFi.localIP());
@@ -35,12 +38,10 @@ void setup() {
 
   Serial.print("Configuring access point...");
 
-  // server.on("/", handleWebui);
   server.serveStatic("/", SPIFFS, "/webui.html");
+  server.on("/time", HTTP_GET, handleWebui);
   server.begin();
   Serial.println("HTTP server started");
-
-
 }
 
 void loop() {
@@ -48,5 +49,6 @@ void loop() {
 }
 
 void handleWebui(){
-  server.send(200, "text/html", "<h1>Bouahaha</h1>");
+  Serial.println("GET /time");
+  server.send(200, "text/plain", "2018-10-02T22:27:00+0200");
 }
