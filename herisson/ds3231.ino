@@ -15,7 +15,7 @@ Time getTime(){
   Time t;
 
   // get data from rtc, set Time struct
-  Wire.requestFrom(RTC_ADDRESS, (uint8_t)5);
+  Wire.requestFrom(RTC_ADDRESS, (uint8_t)6);
   while(Wire.available()){
     byte n = bcd2Dec(Wire.read());
     switch(++c){
@@ -34,13 +34,16 @@ Time getTime(){
       case 5:
         t.month = n;
         break;
+      case 6:
+        t.year = n;
+        break;
     }
   }
 
-  if (c == 5)
+  if (c == 6)
     return checkTimeChange(t);
   else
-    return {0, 0, 0, 0, 0};
+    return {0, 0, 0, 0, 0, 0};
 }
 
 // set time on DS3231
@@ -53,7 +56,7 @@ void setTime(Time t){
   Wire.write(dec2Bcd(t.dow));
   Wire.write(dec2Bcd(t.date));
   Wire.write(dec2Bcd(t.month));
-  Wire.write(dec2Bcd(18)); // year
+  Wire.write(dec2Bcd(t.year));
   Wire.endTransmission();
 }
 

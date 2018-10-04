@@ -9,16 +9,42 @@
 
 void handleTime(){
   Serial.println("GET /time");
-  // Time t = getTime();
-  // String message = t.month;
-  // message += ":";
-  // message += t.day;
-  // message += "\nMethod: ";
-  // message += (server.method() == HTTP_GET) ? "GET" : "POST";
-  // message += "\nArguments: ";
-  // message += server.args();
-  // message += "\n";
-  server.send(200, "text/plain", "coincoin");
+  Time t = getTime();
+  printTime(t);
+  String message = "20";
+  message += t.year;
+  message += "-";
+
+  if (t.month < 10)
+    message += "0";
+  message += t.month;
+
+  message += "-";
+
+  if (t.date < 10)
+    message += "0";
+  message += t.date;
+
+  message += "T";
+
+  if (t.hour < 10)
+    message += "0";
+  message += t.hour;
+
+  message += ":";
+
+  if (t.min < 10)
+    message += "0";
+  message += t.min;
+
+  message += ":00";
+
+  message += winterTimeChangeDone ? "+0100" : "+0200";
+
+  message += " ";
+  message += t.dow;
+
+  server.send(200, "text/plain", message);
 }
 
 bool startServer(){

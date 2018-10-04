@@ -22,6 +22,7 @@ struct Time {
   byte date;
   byte month;
   byte dow;
+  byte year;
 };
 
 // Store light modulation factor for each rgb channel
@@ -53,11 +54,13 @@ void setup(){
   setAirplaneMode();
 
   // for dev/tests: set RTC
-  // setTime((Time){19, 59, 25, 9, 3});
+  setTime((Time){19, 59, 25, 9, 3, 18});
 
   EEPROM.begin(13); // 13 bytes needed. cf readme for usage/Layout
 
   winterTimeChangeDone = (EEPROM.read(0) & 0b00000001) == 1;
+  Serial.print("Winter time change done: ");
+  Serial.println(winterTimeChangeDone);
 
   // get all alarms stored in EEPROM
   EEPROM.get(1, dodo);
@@ -218,7 +221,7 @@ void printTime(Time t){
   Serial.print(t.month);
   Serial.print(" ");
   Serial.print(t.dow);
-  Serial.print("\n");
+  Serial.printf(" 20%i\n", t.year);
 }
 
 void printState(LedStates l){
