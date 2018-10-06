@@ -56,6 +56,26 @@ void getAlarms(){
   server.send(200, "text/plain", res);
 }
 
+void setAlarms(){
+  Serial.println("/POST alarms: ");
+  int _dodo = server.arg("dodo").toInt();
+  int _w1 = server.arg("wakeup1").toInt();
+  int _w2 = server.arg("wakeup2").toInt();
+
+  dodo = _dodo;
+  // EEPROM.put(1, dodo);
+  // EEPROM.put(5, wakeup1);
+  // EEPROM.put(9, wakeup2);
+
+  Serial.printf("dodo: %i / ", dodo);
+  printAlarm(_dodo);
+  Serial.printf("w1: %i / ", _w1);
+  printAlarm(_w1);
+  Serial.printf("w2: %i / ", _w2);
+  printAlarm(_w2);
+  server.send(204, "text/plain", "");
+}
+
 bool startServer(){
   wifi_set_sleep_type(NONE_SLEEP_T);
   WiFi.mode(WIFI_AP);
@@ -71,6 +91,7 @@ bool startServer(){
   server.serveStatic("/", SPIFFS, "/webui.html");
   server.on("/time", HTTP_GET, handleTime);
   server.on("/alarms", HTTP_GET, getAlarms);
+  server.on("/alarms", HTTP_POST, setAlarms);
   server.begin();
   Serial.println("HTTP server started");
 

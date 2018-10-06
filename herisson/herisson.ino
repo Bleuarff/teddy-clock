@@ -54,7 +54,7 @@ void setup(){
   setAirplaneMode();
 
   // for dev/tests: set RTC
-  setTime((Time){19, 59, 25, 9, 3, 18});
+  // setTime((Time){19, 59, 25, 9, 3, 18});
 
   EEPROM.begin(13); // 13 bytes needed. cf readme for usage/Layout
 
@@ -207,8 +207,7 @@ void printAlarm(int a){
   byte min = a % 60;
   Serial.print(hr);
   Serial.print(":");
-  Serial.print(min);
-  Serial.print("\n");
+  Serial.println(min);
 }
 
 void printTime(Time t){
