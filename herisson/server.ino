@@ -8,43 +8,52 @@
 #include <ESP8266mDNS.h>
 
 void handleTime(){
-  Serial.println("GET /time");
+  Serial.print("GET /time: ");
   Time t = getTime();
-  printTime(t);
-  String message = "20";
-  message += t.year;
-  message += "-";
+  String res = "20";
+  res += t.year;
+  res += "-";
 
   if (t.month < 10)
-    message += "0";
-  message += t.month;
+    res += "0";
+  res += t.month;
 
-  message += "-";
+  res += "-";
 
   if (t.date < 10)
-    message += "0";
-  message += t.date;
+    res += "0";
+  res += t.date;
 
-  message += "T";
+  res += "T";
 
   if (t.hour < 10)
-    message += "0";
-  message += t.hour;
+    res += "0";
+  res += t.hour;
 
-  message += ":";
+  res += ":";
 
   if (t.min < 10)
-    message += "0";
-  message += t.min;
+    res += "0";
+  res += t.min;
 
-  message += ":00";
+  res += ":00";
+  res += winterTimeChangeDone ? "+0100" : "+0200";
+  res += " ";
+  res += t.dow;
+  Serial.println(res);
+  server.send(200, "text/plain", res);
+}
 
-  message += winterTimeChangeDone ? "+0100" : "+0200";
-
-  message += " ";
-  message += t.dow;
-
-  server.send(200, "text/plain", message);
+void getAlarms(){
+  Serial.print("GET /alarms: ");
+  String res = "";
+  res += dodo;
+  res += " ";
+  res += wakeup1;
+  res += " ";
+  res += wakeup2;
+  Serial.println(res);
+  server.send(200, "text/plain", res);
 }
 
 bool startServer(){
@@ -61,6 +70,7 @@ bool startServer(){
 
   server.serveStatic("/", SPIFFS, "/webui.html");
   server.on("/time", HTTP_GET, handleTime);
+  server.on("/alarms", HTTP_GET, getAlarms);
   server.begin();
   Serial.println("HTTP server started");
 
