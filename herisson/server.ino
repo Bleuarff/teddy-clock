@@ -44,6 +44,14 @@ void handleTime(){
   server.send(200, "text/plain", res);
 }
 
+void updateTime(){
+  // TODO: parse & save
+  Serial.print("POST /time: ");
+  String t = server.arg("t");
+  Serial.println(t);
+  server.send(200, "text.plain", "");
+}
+
 void getAlarms(){
   Serial.print("GET /alarms: ");
   String res = "";
@@ -93,6 +101,7 @@ bool startServer(){
 
   server.serveStatic("/", SPIFFS, "/webui.html");
   server.on("/time", HTTP_GET, handleTime);
+  server.on("/time", HTTP_POST, updateTime);
   server.on("/alarms", HTTP_GET, getAlarms);
   server.on("/alarms", HTTP_POST, setAlarms);
   server.begin();
