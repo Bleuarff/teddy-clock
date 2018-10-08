@@ -63,9 +63,12 @@ void setAlarms(){
   int _w2 = server.arg("wakeup2").toInt();
 
   dodo = _dodo;
-  // EEPROM.put(1, dodo);
-  // EEPROM.put(5, wakeup1);
-  // EEPROM.put(9, wakeup2);
+  wakeup1 = _w1;
+  wakeup2 = _w2;
+  EEPROM.put(1, dodo);
+  EEPROM.put(5, wakeup1);
+  EEPROM.put(9, wakeup2);
+  EEPROM.commit();
 
   Serial.printf("dodo: %i / ", dodo);
   printAlarm(_dodo);
