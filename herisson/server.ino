@@ -45,10 +45,11 @@ void handleTime(){
 }
 
 void updateTime(){
-  // TODO: parse & save
   Serial.print("POST /time: ");
-  String t = server.arg("t");
-  Serial.println(t);
+  String ts = server.arg("t");
+  Time t = parseDate(ts);
+  printTime(t);
+  setTime(t);
   server.send(200, "text.plain", "");
 }
 
@@ -129,4 +130,15 @@ void setAirplaneMode(){
   wifi_set_sleep_type(MODEM_SLEEP_T);
   WiFi.forceSleepBegin();
   delay(1); // a delay is necessary for forcesleepbegin to have effect
+}
+
+Time parseDate(String ts){
+  Time t;
+  t.year = ts.substring(2, 4).toInt();
+  t.month = ts.substring(5, 7).toInt();
+  t.date = ts.substring(8, 10).toInt();
+  t.hour = ts.substring(11, 13).toInt();
+  t.min = ts.substring(14, 16).toInt();
+  t.dow = ts.substring(20, 21).toInt();
+  return t;
 }
