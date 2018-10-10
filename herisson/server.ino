@@ -47,10 +47,23 @@ void handleTime(){
 void updateTime(){
   Serial.print("POST /time: ");
   String ts = server.arg("t");
+
+  if (ts.length() != 21){
+    server.send(400, "text/plain", "invalid parameter (length)");
+    return;
+  }
+
+  // Serial.println(ts);
   Time t = parseDate(ts);
   printTime(t);
+
+  if (t.year == 0 || t.month == 0 || t.date == 0 || t.dow == 0){
+      server.send(500, "text/plain", "parse error");
+      return;
+  }
+
   setTime(t);
-  server.send(200, "text.plain", "");
+  server.send(204, "text/plain", "");
 }
 
 void getAlarms(){

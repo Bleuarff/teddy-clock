@@ -127,6 +127,7 @@ void loop(){
 
     if (t.month == 0){ // in case of error, getTime returns a Time with all members set to 0
       Serial.print("invalid time\n");
+      lastClockCheck = millis();
       return;
     }
 
