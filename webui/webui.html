@@ -41,6 +41,7 @@
       </table>
 
       <button onclick="updateAlarms()" id="go">Mettre à jour</button>
+      <span id="alarms-check" class="check hidden">✔</span>
     </div>
 
     <script type="text/javascript">
@@ -84,6 +85,7 @@
         // send
         try{
           await fetch(`/alarms?dodo=${dodo}&wakeup1=${wakeupSemaine}&wakeup2=${wakeupWeekend}`, {method: 'POST'})
+          document.getElementById('alarms-check').classList.remove('hidden')
         }
         catch(err){
           console.error(err)
@@ -175,6 +177,13 @@
       #go{
         color: white;
         background: #0063b7;
+      }
+
+      .check{
+        position: absolute;
+        font-size: 2.3em;
+        padding-left: 10px;
+        color: green;
       }
     </style>
   </body>
