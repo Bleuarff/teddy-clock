@@ -3,45 +3,78 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Teddy-clock web ui</title>
+    <title>Admin Hérisson</title>
   </head>
   <body>
-    <h1>Administration Herisson <img src="data:image/png;base64,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">
+    <h1>Admin Hérisson<img src="data:image/png;base64,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">
     </h1>
 
     <div id="ctnr">
-      <table>
-        <tr>
-          <td>Heure du coucher:</td>
-          <td>
-            <input type="time" id="dodo-time">
-          </td>
-        </tr>
-        <tr>
-          <td class="err hidden" id="err-dodo" colspan="2">L'heure n'est pas valide !</td>
-        </tr>
-        <tr>
-          <td>Heure du lever (semaine):</td>
-          <td>
-            <input type="time" id="wakeup-time-semaine">
-          </td>
-        </tr>
-        <tr>
-          <td class="err hidden" id="err-wake-week" colspan="2">L'heure n'est pas valide !</td>
-        </tr>
-        <tr>
-          <td>Heure du lever (weekend):</td>
-          <td>
-            <input type="time" id="wakeup-time-weekend">
-          </td>
-        </tr>
-        <tr>
-          <td class="err hidden" id="err-wake-weekend" colspan="2">L'heure n'est pas valide !</td>
-        </tr>
-      </table>
+      <div class="block" id="alarms-block">
+        <table>
+          <tr>
+            <td>Heure du coucher:</td>
+            <td>
+              <input type="time" id="dodo-time">
+            </td>
+          </tr>
+          <tr>
+            <td class="err hidden" id="err-dodo" colspan="2">L'heure n'est pas valide !</td>
+          </tr>
+          <tr>
+            <td>Heure du lever (semaine):</td>
+            <td>
+              <input type="time" id="wakeup-time-semaine">
+            </td>
+          </tr>
+          <tr>
+            <td class="err hidden" id="err-wake-week" colspan="2">L'heure n'est pas valide !</td>
+          </tr>
+          <tr>
+            <td>Heure du lever (weekend):</td>
+            <td>
+              <input type="time" id="wakeup-time-weekend">
+            </td>
+          </tr>
+          <tr>
+            <td class="err hidden" id="err-wake-weekend" colspan="2">L'heure n'est pas valide !</td>
+          </tr>
+        </table>
 
-      <button onclick="updateAlarms()" id="go">Mettre à jour</button>
-      <span id="alarms-check" class="check hidden">✔</span>
+        <button onclick="updateAlarms()" id="go">Mettre à jour</button>
+        <span id="alarms-check" class="check hidden">✔</span>
+
+      </div>
+      <div class="block" id="time-block">
+        <table>
+          <tbody>
+            <tr>
+              <td>Date:</td>
+              <td><input type="date" id="date"></td>
+            </tr>
+            <tr>
+              <td>Jour:</td>
+              <td>
+                <select id="dow">
+                  <option value="1">Lundi</option>
+                  <option value="2">Mardi</option>
+                  <option value="3">Mercredi</option>
+                  <option value="4">Jeudi</option>
+                  <option value="5">Vendredi</option>
+                  <option value="6">Samedi</option>
+                  <option value="7">Dimanche</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td>Heure:</td>
+              <td><input type="time" id="time"></td>
+            </tr>
+          </tbody>
+        </table>
+        <button onclick="updateTime()" id="goTime">Mettre à jour</button>
+        <span id="time-check" class="check hidden">✔</span>
+      </div>
     </div>
 
     <script type="text/javascript">
@@ -53,13 +86,31 @@
           let resp = await fetch('/alarms'),
               txt = await resp.text(),
               alarms = txt.split(' ')
-              document.getElementById('dodo-time').value = value2Time(alarms[0])
-              document.getElementById('wakeup-time-semaine').value = value2Time(alarms[1])
-              document.getElementById('wakeup-time-weekend').value = value2Time(alarms[2])
+          document.getElementById('dodo-time').value = value2Time(alarms[0])
+          document.getElementById('wakeup-time-semaine').value = value2Time(alarms[1])
+          document.getElementById('wakeup-time-weekend').value = value2Time(alarms[2])
         }
         catch(err){
           console.error(err)
           alert('Erreur: impossible de retrouver les alarmes.')
+        }
+
+        try{
+          let resp = await fetch('/time'),
+              txt = await resp.text(),
+              vals = txt.split(' '),
+              dow = vals[1],
+              date = vals[0].substr(0, 10),
+              time = vals[0].substr(11,5)
+
+          document.getElementById('dow').value = dow
+          document.getElementById('date').value = date
+          document.getElementById('time').value = time
+
+        }
+        catch(err){
+          console.error(err)
+          alert('Erreur: impossible de récuperer l\'heure courante.')
         }
       }()
 
@@ -118,34 +169,53 @@
     <style>
       body{
         width: 100vw;
+        height: 100vh;
         margin: 0;
         text-align: center;
         font-family: 'Times New Roman';
         font-size: 1.1em;
       }
+      * {box-sizing: border-box;}
       h1{
         color: white;
         background: #0063b7;
-        margin: 0 0 1em;
+        margin: 0;
         padding: 2px 0;
         font-size: 1.8em;
+        height: 40px;
       }
       img{
-        width:35px;
+        width: 35px;
+        margin-left: .8em;
       }
       #ctnr{
         width: 100%;
+        height: calc(100% - 40px - 1em);
         max-width: 700px;
         padding: 0;
         margin: 0 auto;
+        margin-top: 1em;
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: space-between;
       }
+
+      #time-block{
+        margin-bottom: 2em;
+      }
+
       table{
         border-collapse: collapse;
         margin: 0 auto;
-        margin-bottom: 2em;
+        margin-bottom: .8em;
         border: none;
         width: 100%;
       }
+
+      #time-block td:first-child{
+        width: 35%;
+      }
+
       td{
         width:50%;
         padding-top: .6em;
@@ -164,6 +234,7 @@
       button{
         width: 65%;;
         height: 3.5em;
+        margin: .5em 0;
       }
       .err{
         color: red;
@@ -174,7 +245,7 @@
       .hidden{
         display: none !important;
       }
-      #go{
+      button{
         color: white;
         background: #0063b7;
       }
