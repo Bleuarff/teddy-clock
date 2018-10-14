@@ -40,34 +40,76 @@
         </tr>
       </table>
 
-      <button onclick="update()" id="go">Mettre à jour</button>
-      © Bleuarff
+      <button onclick="updateAlarms()" id="go">Mettre à jour</button>
     </div>
 
     <script type="text/javascript">
       'use strict'
 
-      function update(){
-        const dodo = document.getElementById('dodo-time').value,
-            wakeup_semaine = document.getElementById('wakeup-time-semaine').value,
-            wakeup_weekend = document.getElementById('wakeup-time-weekend').value
+      void async function(){
+        // retrieve alarms
+        try{
+          let resp = await fetch('/alarms'),
+              txt = await resp.text(),
+              alarms = txt.split(' ')
+              document.getElementById('dodo-time').value = value2Time(alarms[0])
+              document.getElementById('wakeup-time-semaine').value = value2Time(alarms[1])
+              document.getElementById('wakeup-time-weekend').value = value2Time(alarms[2])
+        }
+        catch(err){
+          console.error(err)
+          alert('Erreur: impossible de retrouver les alarmes.')
+        }
+      }()
 
-        if (!validation(dodo, wakeup_semaine, wakeup_weekend))
-          console.log('coin')
+      async function updateAlarms(){
+        const dodo_s = document.getElementById('dodo-time').value,
+              wakeup_semaine_s = document.getElementById('wakeup-time-semaine').value,
+              wakeup_weekend_s = document.getElementById('wakeup-time-weekend').value
 
+        showErr(dodo_s, 'dodo')
+        showErr(wakeup_semaine_s, 'wake-week')
+        showErr(wakeup_weekend_s, 'wake-weekend')
+
+        if (!dodo_s || !wakeup_semaine_s || !wakeup_weekend_s){
+          console.log('Invalid values')
+          return
+        }
+
+        // convert string time into integer value, send, validate response.
+        const dodo = time2Value(dodo_s),
+              wakeupSemaine = time2Value(wakeup_semaine_s),
+              wakeupWeekend = time2Value(wakeup_weekend_s)
+
+        // send
+        try{
+          await fetch(`/alarms?dodo=${dodo}&wakeup1=${wakeupSemaine}&wakeup2=${wakeupWeekend}`, {method: 'POST'})
+        }
+        catch(err){
+          console.error(err)
+          alert('Erreur d\'envoi')
+        }
       }
 
-      function validation(dodo, wake1, wake2){
-        var node = document.getElementById('err-dodo')
-        node.classList[dodo ? 'add' : 'remove'].call(node.classList, 'hidden')
+      function showErr(val, id){
+        const node = document.getElementById(`err-${id}`)
+        node.classList[val ? 'add' : 'remove'].call(node.classList, 'hidden')
+      }
 
-        node = document.getElementById('err-wake-week')
-        node.classList[wake1 ? 'add' : 'remove'].call(node.classList, 'hidden')
+      // convert time from string to integer value
+      function time2Value(val){
+        const rx = /^(\d{2}):(\d{2})$/,
+              matches = val.match(rx),
+              hours = parseInt(matches[1], 10),
+              mins = parseInt(matches[2], 10)
 
-        node = document.getElementById('err-wake-weekend')
-        node.classList[wake2 ? 'add' : 'remove'].call(node.classList, 'hidden')
+        return hours * 60 + mins
+      }
 
-        return dodo && wake1 && wake2
+      function value2Time(val){
+        const hours = Math.floor(val / 60).toString().padStart(2, '0'),
+              mins = (val % 60).toString().padStart(2, '0')
+        return `${hours}:${mins}`
       }
     </script>
 
