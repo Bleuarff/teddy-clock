@@ -53,6 +53,9 @@
               <td><input type="date" id="date"></td>
             </tr>
             <tr>
+              <td class="err hidden" id="err-date" colspan="2">La date n'est pas valide !</td>
+            </tr>
+            <tr>
               <td>Jour:</td>
               <td>
                 <select id="dow">
@@ -70,6 +73,9 @@
               <td>Heure:</td>
               <td><input type="time" id="time"></td>
             </tr>
+            <tr>
+              <td class="err hidden" id="err-time" colspan="2">L'heure n'est pas valide !</td>
+            </tr>
           </tbody>
         </table>
         <button onclick="updateTime()" id="goTime">Mettre à jour</button>
@@ -80,8 +86,8 @@
     <script type="text/javascript">
       'use strict'
 
+      // retrieve values (alarms & timestamp) and set inputs
       void async function(){
-        // retrieve alarms
         try{
           let resp = await fetch('/alarms'),
               txt = await resp.text(),
@@ -124,7 +130,7 @@
         showErr(wakeup_weekend_s, 'wake-weekend')
 
         if (!dodo_s || !wakeup_semaine_s || !wakeup_weekend_s){
-          console.log('Invalid values')
+          console.log('Invalid alarm values')
           return
         }
 
@@ -133,8 +139,8 @@
               wakeupSemaine = time2Value(wakeup_semaine_s),
               wakeupWeekend = time2Value(wakeup_weekend_s)
 
-        // send
         try{
+          document.querySelectorAll('button').forEach(x => x.setAttribute('disabled', 'disabled'))
           await fetch(`/alarms?dodo=${dodo}&wakeup1=${wakeupSemaine}&wakeup2=${wakeupWeekend}`, {method: 'POST'})
           document.getElementById('alarms-check').classList.remove('hidden')
         }
@@ -142,6 +148,35 @@
           console.error(err)
           alert('Erreur d\'envoi')
         }
+        document.querySelectorAll('button').forEach(x => x.removeAttribute('disabled'))
+      }
+
+      async function updateTime(){
+        const date = document.getElementById('date').value,
+              dow = document.getElementById('dow').value,
+              time = document.getElementById('time').value
+
+        showErr(date, 'date')
+        showErr(time, 'time')
+
+        if (!date || !dow || !time){
+          console.error('Invalid date/time values')
+          return
+        }
+        try{
+          document.querySelectorAll('button').forEach(x => x.setAttribute('disabled', 'disabled'))
+          await fetch('/time', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: `t=${date}T${time}:00 ${dow}`
+          })
+          document.getElementById('time-check').classList.remove('hidden')
+        }
+        catch(err){
+          console.error(err)
+          alert('Erreur d\'envoi')
+        }
+        document.querySelectorAll('button').forEach(x => x.removeAttribute('disabled'))
       }
 
       function showErr(val, id){
@@ -248,6 +283,11 @@
       button{
         color: white;
         background: #0063b7;
+      }
+
+      button:disabled{
+        color: #686868;
+        background: #e4e4e4;
       }
 
       .check{
