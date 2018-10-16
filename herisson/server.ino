@@ -105,6 +105,12 @@ bool startServer(){
   wifi_set_sleep_type(NONE_SLEEP_T);
   WiFi.mode(WIFI_AP);
 
+  // local IP and & gateway 192.168.14.1, subnet 255.255.255.0
+  if (!WiFi.softAPConfig(0x010EA8C0, 0x010EA8C0, 0x00FFFFFF)){
+    Serial.println("Wifi config failed");
+    return false;
+  }
+
   // ssid, no password, channel 14, ssid visible, max connection
   bool res = WiFi.softAP("Herisson", NULL, 14, false, 2);
 
