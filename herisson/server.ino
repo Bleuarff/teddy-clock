@@ -124,6 +124,7 @@ bool startServer(){
   server.on("/time", HTTP_POST, updateTime);
   server.on("/alarms", HTTP_GET, getAlarms);
   server.on("/alarms", HTTP_POST, setAlarms);
+  server.serveStatic("/favicon.png", SPIFFS, "/favicon.png");
   server.begin();
   Serial.println("HTTP server started");
 
