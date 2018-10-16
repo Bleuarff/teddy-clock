@@ -11,7 +11,7 @@ enum LedStates {Dodo, Debout, Off};
 const byte redPin = 14;
 const byte greenPin = 13;
 const byte bluePin = 12;
-const byte switchPin = 16;
+const byte switchPin = 15;
 const int CLOCK_CHECK_INTERVAL = 5000; // time between clock checks
 
 // Object to store timestamp
