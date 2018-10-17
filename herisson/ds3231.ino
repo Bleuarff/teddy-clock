@@ -84,6 +84,7 @@ Time checkTimeChange(Time t){
     // reset winter time change flag, without changing other (future) bits
     byte flags = EEPROM.read(0) & 0b11111110;
     EEPROM.write(0, flags);
+    EEPROM.commit();
     winterTimeChangeDone = false;
   }
   // winter time change at 3AM on the last sunday of October
@@ -103,6 +104,7 @@ Time checkTimeChange(Time t){
       // sets winter time change flag to 1 while keeping other bits' value
       byte flags = EEPROM.read(0) | 0b00000001;
       EEPROM.write(0, flags);
+      EEPROM.commit();
       winterTimeChangeDone = true;
     }
   }

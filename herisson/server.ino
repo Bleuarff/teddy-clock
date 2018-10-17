@@ -10,36 +10,7 @@
 void handleTime(){
   Serial.print("GET /time: ");
   Time t = getTime();
-  String res = "20";
-  res += t.year;
-  res += "-";
-
-  if (t.month < 10)
-    res += "0";
-  res += t.month;
-
-  res += "-";
-
-  if (t.date < 10)
-    res += "0";
-  res += t.date;
-
-  res += "T";
-
-  if (t.hour < 10)
-    res += "0";
-  res += t.hour;
-
-  res += ":";
-
-  if (t.min < 10)
-    res += "0";
-  res += t.min;
-
-  res += ":00";
-  res += winterTimeChangeDone ? "+0100" : "+0200";
-  res += " ";
-  res += t.dow;
+  String res = toISO8106(t);
   Serial.println(res);
   server.send(200, "text/plain", res);
 }
@@ -63,7 +34,7 @@ void updateTime(){
   }
 
   setTime(t);
-  server.send(204, "text/plain", "");
+  server.send(200, "text/plain", toISO8106(t));
 }
 
 void getAlarms(){
@@ -161,4 +132,40 @@ Time parseDate(String ts){
   t.min = ts.substring(14, 16).toInt();
   t.dow = ts.substring(20, 21).toInt();
   return t;
+}
+
+// converts time to ISO-8601 string + day of week behind it
+String toISO8106(Time t){
+  String res = "20";
+  res += t.year;
+  res += "-";
+
+  if (t.month < 10)
+    res += "0";
+  res += t.month;
+
+  res += "-";
+
+  if (t.date < 10)
+    res += "0";
+  res += t.date;
+
+  res += "T";
+
+  if (t.hour < 10)
+    res += "0";
+  res += t.hour;
+
+  res += ":";
+
+  if (t.min < 10)
+    res += "0";
+  res += t.min;
+
+  res += ":00";
+  res += winterTimeChangeDone ? "+0100" : "+0200";
+  res += " ";
+  res += t.dow;
+
+  return res;
 }
