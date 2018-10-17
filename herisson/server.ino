@@ -7,6 +7,7 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
 
+// returns the current time
 void handleTime(){
   Serial.print("GET /time: ");
   Time t = getTime();
@@ -15,6 +16,7 @@ void handleTime(){
   server.send(200, "text/plain", res);
 }
 
+// sets the current time
 void updateTime(){
   Serial.print("POST /time: ");
   String ts = server.arg("t");
@@ -37,6 +39,7 @@ void updateTime(){
   server.send(200, "text/plain", toISO8106(t));
 }
 
+// Returns the 3 configured alarms
 void getAlarms(){
   Serial.print("GET /alarms: ");
   String res = "";
@@ -49,6 +52,7 @@ void getAlarms(){
   server.send(200, "text/plain", res);
 }
 
+// set the alarms
 void setAlarms(){
   Serial.println("/POST alarms: ");
   int _dodo = server.arg("dodo").toInt();
@@ -111,10 +115,6 @@ bool stopServer(){
   return res;
 }
 
-const char* returnTime(){
-
-}
-
 // goes to modem-sleep mode. Consumes ~20mA instead of 80+ mA when wifi is up
 void setAirplaneMode(){
   WiFi.mode(WIFI_OFF);
@@ -123,6 +123,7 @@ void setAirplaneMode(){
   delay(1); // a delay is necessary for forcesleepbegin to have effect
 }
 
+// parses date string into Time struct
 Time parseDate(String ts){
   Time t;
   t.year = ts.substring(2, 4).toInt();

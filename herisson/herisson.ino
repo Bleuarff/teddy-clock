@@ -60,15 +60,18 @@ void setup(){
 
   winterTimeChangeDone = (EEPROM.read(0) & 0b00000001) == 1;
   Serial.print("Winter time change done: ");
-  Serial.println(winterTimeChangeDone);
+  Serial.println(winterTimeChangeDone ? "oui": "non");
 
   // get all alarms stored in EEPROM
   EEPROM.get(1, dodo);
   EEPROM.get(5, wakeup1);
   EEPROM.get(9, wakeup2);
 
+  Serial.print("Dodo time: ");
   printAlarm(dodo);
+  Serial.print("Lever (semaine): ");
   printAlarm(wakeup1);
+  Serial.print("Lever (weekend): ");
   printAlarm(wakeup2);
 
   if (!SPIFFS.begin()){
@@ -167,12 +170,6 @@ void setLed(LedStates state, ModFactor mofact){
   analogWrite(greenPin, green);
   analogWrite(bluePin, blue);
 
-  // Serial.print(red);
-  // Serial.print(" ");
-  // Serial.print(green);
-  // Serial.print(" ");
-  // Serial.print(blue);
-  // Serial.print("\n");
   Serial.printf("red: %i\tgreen: %i\tblue: %i\n", red, green, blue);
 }
 
@@ -206,9 +203,7 @@ ModFactor getModFactor(){
 void printAlarm(int a){
   byte hr = a / 60;
   byte min = a % 60;
-  Serial.print(hr);
-  Serial.print(":");
-  Serial.println(min);
+  Serial.printf("%i:%i\n", hr, min);
 }
 
 void printTime(Time t){
