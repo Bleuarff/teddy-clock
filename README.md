@@ -16,9 +16,9 @@ To update these times, the clock offers a web interface. It's not connected to w
 
 # Wifi
 
-When you press the button, the clock creates its own SSID. You must connect to Hérisson network (public, no authentication) and go to http://192.168.14.1 to access the web interface.  
-There, you can edit any of the times (sleep time, wake-up times for weekdays and weekends) as well as the current time and date.  
-The led blinks green when wifi is on. Just press the button again to switch it off. Web ui is a single html file uploaded to esp8266's internal file system (SPIFFS).
+When you press the button, the clock creates its own SSID. You must connect to network **Hérisson** (public, no authentication). Ease of use trumps everything in such a simple, low-risk project. SSL and auth (WPA2-PSK) are not worth the hassle, both for dev and use. Wifi is off most of the time anyway.  
+Go to **http://192.168.14.1** to access the web interface. There, you can edit any of the times (sleep time, wake-up times for weekdays and weekends) as well as the current time and date. Web ui is a single html file uploaded to esp8266's internal file system (SPIFFS).  
+The led blinks green when wifi is on. Just press the button again to switch it off.
 
 Why not having it connected permanently? Here are a few reasons:
 - home wifi is flaky in the room,
@@ -28,18 +28,16 @@ Why not having it connected permanently? Here are a few reasons:
 
 # EEPROM Layout
 
-esp8266 has 4k EEPROM. We use it to store the alarms (4 bytes each) and daylight saving flag (1 if winter time has been done, LSB bit in first byte of the memory bank).
+esp8266 has 4k EEPROM. We use it to store the alarms (4 bytes each) and daylight saving flag (1 if winter time has been done, LSB bit in first byte of the memory bank). Alarm times are stored in minutes since 00:00.
 
-| Address | bit 7 | bit 6 | bit 5 | bit 4 | bit 3 | bit 2 | bit 1 | bit 0 | Description
-|-
-|00h <td colspan="7"> | winter time change done (1) or not (0) | some flags
-|01h <td rowspan="2" colspan="8"> dodo time <td rowspan="2"> (int) dodo time, in minutes since 00:00
-|02h
-|03h <td colspan="8" rowspan="2">week wakeup time <td rowspan="2"> (int) week wakeup time time, in minutes since 00:00
-|04h
-|05h <td colspan="8" rowspan="2">weekend wakeup time <td rowspan="2"> (int) weekend wakeup time time, in minutes since 00:00
-|06h
-
+````
+Address |  value   | Desc  
+--------|----------|------
+00h     | 00000001 | winter time change done  
+01h-04h |          | sleep time  
+05h-08h |          | weekdays wakeup time  
+09h-12h |          | weekend wakeup time
+````
 
 # Conventions
 
@@ -48,3 +46,4 @@ esp8266 has 4k EEPROM. We use it to store the alarms (4 bytes each) and daylight
 # Misc
 
 - DS3231 handles leap years correctly
+- Daylight saving time change is checked and performed on sunday in the last 7 days of march and october. Update time and set winter time flag in eeprom.
