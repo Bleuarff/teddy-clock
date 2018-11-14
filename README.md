@@ -14,6 +14,10 @@ The clock uses 3 parameters:
 
 To update these times, the clock offers a web interface. It's not connected to wifi for various reasons but instead creates its own SSID when you need it.
 
+## Schema
+
+![schema](https://raw.githubusercontent.com/Bleuarff/teddy-clock/master/diagram.png)
+
 ## Wifi
 
 When you press the button, the clock creates its own SSID. You must connect to network **Hérisson** (public, no authentication). Ease of use trumps everything in such a simple, low-risk project. SSL and auth (WPA2-PSK) are not worth the hassle, both for dev and use. Wifi is off most of the time anyway.  
