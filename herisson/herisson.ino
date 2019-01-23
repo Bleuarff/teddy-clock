@@ -158,12 +158,12 @@ void setLed(LedStates state, ModFactor mofact){
       break;
     case Dodo:
       red = green = 0;
-      blue = 255 * mofact.bf;
+      blue = 1023 * mofact.bf;
       break;
     case Debout:
       blue = 0;
-      green = 255 * mofact.gf;
-      red = 128 * mofact.rf;
+      green = 1023 * mofact.gf;
+      red = 512 * mofact.rf;
       break;
   }
   analogWrite(redPin, red);
