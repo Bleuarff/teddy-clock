@@ -26,11 +26,11 @@ struct Time {
 };
 
 // Store light modulation factor for each rgb channel
-struct ModFactor {
-  float rf; // red channel
-  float gf; // green channel
-  float bf; // blue channel
-};
+// struct ModFactor {
+//   float rf; // red channel
+//   float gf; // green channel
+//   float bf; // blue channel
+// };
 
 // 3 alarms needed
 int dodo, wakeup1, wakeup2;
@@ -140,8 +140,7 @@ void loop(){
     const LedStates lightState = getLightState(t);
     printState(lightState);
 
-    ModFactor mofact = getModFactor(); // get modulation factor for each rgb channel from light sensor value
-    setLed(lightState, mofact); // update led state
+    setLed(lightState); // update led state
 
     lastClockCheck = millis();
   }
@@ -149,8 +148,9 @@ void loop(){
 
 // Write RGB values from clockstate
 // state: clock state
-void setLed(LedStates state, ModFactor mofact){
+void setLed(LedStates state){
   int red, green, blue; // pwm value for each pin
+  const int lightLvl = analogRead(A0); // ambiant light level
 
   switch(state){
     case Off:
@@ -158,12 +158,12 @@ void setLed(LedStates state, ModFactor mofact){
       break;
     case Dodo:
       red = green = 0;
-      blue = 1023 * mofact.bf;
+      blue = computeBlueChannel(lightLvl);
       break;
     case Debout:
       blue = 0;
-      green = 1023 * mofact.gf;
-      red = 512 * mofact.rf;
+      green = computeGreenChannel(lightLvl);
+      red = computeRedChannel(lightLvl);
       break;
   }
   analogWrite(redPin, red);
@@ -193,11 +193,11 @@ LedStates getLightState(Time t){
 // set modulation factor from light sensor
 // Currently: linear relationship between ambiant light value and output led value, for all color channels
 // TODO: calibrate: min/max value for min/max ambiant light values. See calibrage_photores sketch
-ModFactor getModFactor(){
-  int lightLvl = analogRead(A0);
-  float lightRatio = (float)lightLvl / 1024;
-  return { lightRatio, lightRatio, lightRatio };
-}
+// ModFactor getModFactor(){
+//   int lightLvl = analogRead(A0);
+//   float lightRatio = (float)lightLvl / 1024;
+//   return { lightRatio, lightRatio, lightRatio };
+// }
 
 // displays alarm
 void printAlarm(int a){
