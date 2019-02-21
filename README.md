@@ -51,10 +51,13 @@ Address |  value   | Desc
 
 Light output is proportional to ambiant light. The relation is not the simple identity function f(x) = x.
 To create the ideal function, we want to plot values.
-The sketch `calibrage` creates a web server (public SSID Hérisson, 192.168.14.1):  
-`GET /sense` to retrieve ambiant light value (theoretically 0-1024)  
-`POST /led?r=R&g=G&b=B` to set led output ; R, G and B being the PWM values for each channel.  
-We try to find the ideal output in each color (sleep blue and wakeup orange) for multiple ambiant light values. Results will be plotted down and used to extrapolate an ideal function.
+The sketch `calibrage` creates a web server (public SSID Hérisson, 192.168.14.1) with endpoints:  
+- `GET /sense` to retrieve ambiant light value (theoretically 0-1024),  
+- `POST /led?r=R&g=G&b=B` to set led output ; R, G and B being the PWM values for each channel.
+
+We try to find the ideal output in each color (sleep blue and wakeup orange) for multiple ambiant light values. Results are in `resultats_calibrage.ods` file.  
+For each channel, we want to write a function that more or less reflects the calibration data points. The ideal function should be superimposed if plotted along the data points. We do that by considering that the values between 2 data points should observe an affine function (with data range extremities being minimum & maximum values).  
+`tests/pwm_function/pwm_function.cpp` implements the affine functions and compares with calibration data to verify that's ok ; and `herisson/lightModulator.ino` simply copies this code.
 
 ## Misc
 
