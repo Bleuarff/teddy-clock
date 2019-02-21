@@ -158,19 +158,19 @@ void setLed(LedStates state){
       break;
     case Dodo:
       red = green = 0;
-      blue = computeBlueChannel(lightLvl);
+      blue = (int)computeBlueChannel(lightLvl);
       break;
     case Debout:
       blue = 0;
-      green = computeGreenChannel(lightLvl);
-      red = computeRedChannel(lightLvl);
+      green = (int)computeGreenChannel(lightLvl);
+      red = (int)computeRedChannel(lightLvl);
       break;
   }
   analogWrite(redPin, red);
   analogWrite(greenPin, green);
   analogWrite(bluePin, blue);
 
-  Serial.printf("red: %i\tgreen: %i\tblue: %i\n", red, green, blue);
+  Serial.printf("A %i\tR %i\tG %i\tB %i\n", lightLvl, red, green, blue);
 }
 
 // return the state to apply to the led based on current time & global alarms
