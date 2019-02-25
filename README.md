@@ -4,15 +4,15 @@ An alarm clock that does not display the time, but lights itself depending on th
 
 ## Overview
 
-An esp8266 microcontroller lights an RGB led in different colors depending whether the children must stay in their room or they are allowed to wake their parents.  
-A full-on led in the dead of the night is a sure way to for kids to not go back to sleep if they ever wake up. To avoid this, a photoresistor is used to sense ambient light and adjust luminosity accordingly.  
-The setup uses an RTC clock with backup battery to help keep time reliably, and daylight saving is taken into account.
+An esp8266 microcontroller lights an RGB led in different colors depending whether the children must stay in their room or they are allowed to wake their parents up.  
+A full-on led in the dead of the night is a sure way for kids to not go back to sleep if they ever wake up. To avoid this, a photoresistor is used to sense ambient light and adjust luminosity accordingly.  
+The setup uses an RTC clock with backup battery to help keep time reliably. Daylight saving is taken into account.
 
 The clock uses 3 parameters:
 - sleep time: time at which children must go to bed. Led becomes blue,
-- wake-up times: times at which children may leve their room at wake their parents up. One for week days, and another one for weekends (one can dream of a Sundy sleep in). Led goes orange for 2 hours.
+- wake-up times: times at which children may leve their room at wake their parents up. One for week days, and another one for weekends (one can dream of a Sunday sleep in). Led goes orange for 2 hours.
 
-To update these times, the clock offers a web interface. It's not connected to wifi for various reasons but instead creates its own SSID when you need it.
+To update these times, the clock offers a web interface. It's not connected to home wifi for various reasons but instead creates its own SSID when you need it.
 
 ## Schema
 
@@ -24,9 +24,9 @@ When you press the button, the clock creates its own SSID. You must connect to n
 Go to **http://192.168.14.1** to access the web interface. There, you can edit any of the times (sleep time, wake-up times for weekdays and weekends) as well as the current time and date. Web ui is a single html file uploaded to esp8266's internal file system (SPIFFS).  
 The led blinks green when wifi is on. Just press the button again to switch it off.
 
-Why not having it connected permanently? Here are a few reasons:
+Why not having it connected permanently?
 - home wifi is flaky in the room,
-- very sporadic usage (I won't edit the alarms 5 times a day) does not need 100% connection,
+- very sporadic usage does not need 100% connection,
 - lower power usage when modem is off
 
 
@@ -56,7 +56,7 @@ The sketch `calibrage` creates a web server (public SSID Hérisson, 192.168.14.1
 - `POST /led?r=R&g=G&b=B` to set led output ; R, G and B being the PWM values for each channel.
 
 We try to find the ideal output in each color (sleep blue and wakeup orange) for multiple ambiant light values. Results are in `resultats_calibrage.ods` file.  
-For each channel, we want to write a function that more or less reflects the calibration data points. The ideal function should be superimposed if plotted along the data points. We do that by considering that the values between 2 data points should observe an affine function (with data range extremities being minimum & maximum values).  
+For each channel, we want to write a function that more or less reflects the calibration data points. The ideal function should be superimposed over the data points if plotted along them. We do that by considering that the values between 2 data points should observe an affine function (with data range extremities being minimum & maximum values).  
 `tests/pwm_function/pwm_function.cpp` implements the affine functions and compares with calibration data to verify that's ok ; and `herisson/lightModulator.ino` simply copies this code.
 
 ## Misc
