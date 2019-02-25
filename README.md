@@ -2,6 +2,8 @@
 
 An alarm clock that does not display the time, but lights itself depending on the time of the day.
 
+![Hérisson](https://raw.githubusercontent.com/Bleuarff/teddy-clock/master/herisson-sleep.jpg)
+
 ## Overview
 
 An esp8266 microcontroller lights an RGB led in different colors depending whether the children must stay in their room or they are allowed to wake their parents up.  
