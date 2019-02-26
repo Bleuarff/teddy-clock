@@ -3,6 +3,7 @@
 An alarm clock that does not display the time, but lights itself depending on the time of the day.
 
 ![Hérisson](https://raw.githubusercontent.com/Bleuarff/teddy-clock/master/herisson-sleep.jpg)
+![Hérisson](https://raw.githubusercontent.com/Bleuarff/teddy-clock/master/herisson-wakeup.jpg)
 
 ## Overview
 
