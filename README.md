@@ -60,9 +60,15 @@ The sketch `calibrage` creates a web server (public SSID Hérisson, 192.168.14.1
 
 We try to find the ideal output in each color (sleep blue and wakeup orange) for multiple ambiant light values. Results are in `resultats_calibrage.ods` file.  
 For each channel, we want to write a function that more or less reflects the calibration data points. The ideal function should be superimposed over the data points if plotted along them. We do that by considering that the values between 2 data points should observe an affine function (with data range extremities being minimum & maximum values).  
-`tests/pwm_function/pwm_function.cpp` implements the affine functions and compares with calibration data to verify that's ok ; and `herisson/lightModulator.ino` simply copies this code.
+`tests/pwm_function/pwm_function.cpp` implements the affine functions and compares with calibration data to verify that's ok ; and `herisson/lightModulator.ino` simply copies this code, with a few last-minute adjustments.
 
 ## Misc
 
-- DS3231 handles leap years correctly
+- DS3231 handles leap years correctly.
 - Daylight saving time change is checked and performed on sunday in the last 7 days of march and october. Update time and set winter time flag in eeprom.
+- To upload a sketch onto the ESP8266, it must in bootload mode. The procedure is as follow:
+
+    1. Hold down the GPIO0 button, the red LED will be lit
+    2. While holding down GPIO0, click the RESET button
+    3. Release RESET, then release GPIO0
+    4. When you release the RESET button, the red LED will be lit dimly, this means it's ready to bootload

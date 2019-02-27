@@ -10,8 +10,8 @@
 float computeBlueChannel(int lightLvl){
   float val;
 
-  if (lightLvl < 10)
-    val = 40;
+  if (lightLvl <= 10)
+    val = 30;
   else if (lightLvl < 20)
     val = 5 * lightLvl;
   else if (lightLvl < 70)
@@ -37,8 +37,8 @@ float computeBlueChannel(int lightLvl){
 float computeRedChannel(int lightLvl){
   float val;
 
-  if (lightLvl < 10)
-    val = 40;
+  if (lightLvl <= 10)
+    val = 30;
   else if (lightLvl <= 20)
     val = 2.308 * lightLvl + 23;
   else if (lightLvl <= 70)
@@ -66,8 +66,8 @@ float computeRedChannel(int lightLvl){
 float computeGreenChannel(int lightLvl){
   float val;
 
-  if (lightLvl < 10)
-    val = 80;
+  if (lightLvl <= 10)
+    val = 60;
   else if (lightLvl <= 20)
     val = lightLvl * 4.615 + 47;
   else if (lightLvl <= 70)
