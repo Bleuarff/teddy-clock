@@ -87,7 +87,7 @@ bool startServer(){
   }
 
   // ssid, no password, channel 14, ssid visible, max connection
-  bool res = WiFi.softAP("Hérisson", NULL, 14, false, 2);
+  bool res = WiFi.softAP("Hibou", NULL, 14, false, 2);
 
   if (!res){
     Serial.println("Wifi failed");
