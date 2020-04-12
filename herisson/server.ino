@@ -16,6 +16,15 @@ void handleTime(){
   server.send(200, "text/plain", res);
 }
 
+void handleTemp(){
+  Serial.print("GET /temp: ");
+  String res =  "";
+  int temp = getTemp();
+  res += temp;
+  Serial.println(res);
+  server.send(200, "text/plain", res);
+}
+
 // sets the current time
 void updateTime(){
   Serial.print("POST /time: ");
@@ -99,6 +108,7 @@ bool startServer(){
   server.on("/time", HTTP_POST, updateTime);
   server.on("/alarms", HTTP_GET, getAlarms);
   server.on("/alarms", HTTP_POST, setAlarms);
+  server.on("/temp", HTTP_GET, handleTemp);
   server.serveStatic("/favicon.png", SPIFFS, "/favicon.png");
   server.begin();
   Serial.println("HTTP server started");

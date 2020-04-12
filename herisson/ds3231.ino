@@ -111,3 +111,27 @@ Time checkTimeChange(Time t){
 
   return t;
 }
+
+// reads the temperature.
+// Only get the integer part of it, that's enough. Also, don't bother
+// with negative temp. First, it should not happen. Second,
+// no need for 2's complement arithmetic.
+int getTemp(){
+  Wire.beginTransmission(RTC_ADDRESS);
+  Wire.write(0x11);
+  Wire.endTransmission();
+  int temp = -100; // initial value, returned if we cannot read the temperature
+
+  Wire.requestFrom(RTC_ADDRESS, (uint8_t)1);
+  if (Wire.available()){
+    byte n = Wire.read();
+
+    // value above 128 is a negative temp, just return -1
+    if (n < 128)
+      temp = (int)n;
+    else
+      temp = -1;
+  }
+
+  return temp;
+}
