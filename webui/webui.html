@@ -82,6 +82,9 @@
         <button onclick="updateTime()" id="goTime">Mettre à jour</button>
         <span id="time-check" class="check hidden">✔</span>
       </div>
+      <div id="temp-ctnr">
+        Temp: <span id="temp"></span>°
+      </div>
     </div>
 
     <script type="text/javascript">
@@ -120,6 +123,17 @@
         catch(err){
           console.error(err)
           alert('Erreur: impossible de récuperer l\'heure courante.')
+        }
+
+        try{
+          let resp = await fetch('/temp'),
+              temp = await resp.text()
+
+          document.getElementById('temp').innerHTML = temp
+        }
+        catch(err){
+          console.error(err)
+          alert('Erreur: impossible de récuperer la température.')
         }
       }()
 
@@ -309,6 +323,13 @@
         font-size: 2.3em;
         padding-left: 10px;
         color: green;
+      }
+
+      #temp-ctnr{
+        position: absolute;
+        bottom: 2px;
+        right: 1em;
+
       }
     </style>
   </body>
